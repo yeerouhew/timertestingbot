@@ -1,4 +1,5 @@
 import logging
+import os
 
 from telegram.ext import Updater, CommandHandler
 
@@ -7,6 +8,10 @@ logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s
                     level=logging.INFO)
 
 logger = logging.getLogger(__name__)
+
+TOKEN = '1056559491:AAEMi9W3Csh9KDGDflCrSOaTFaNCU4k29FE'
+
+PORT = int(os.environ.get('PORT', 5000))
 
 
 # Define a few command handlers. These usually take the two arguments update and
@@ -67,7 +72,7 @@ def main():
     # Create the Updater and pass it your bot's token.
     # Make sure to set use_context=True to use the new context based callbacks
     # Post version 12 this will no longer be necessary
-    updater = Updater("", use_context=True)
+    updater = Updater(TOKEN, use_context=True)
 
     # Get the dispatcher to register handlers
     dp = updater.dispatcher
@@ -85,7 +90,10 @@ def main():
     dp.add_error_handler(error)
 
     # Start the Bot
-    updater.start_polling()
+    updater.start_webhook(listen="0.0.0.0",
+                           port=int(PORT),
+                           url_path=TOKEN)
+    updater.bot.setWebhook('https://timertesting-bot.herokuapp.com/' + TOKEN)
 
     # Block until you press Ctrl-C or the process receives SIGINT, SIGTERM or
     # SIGABRT. This should be used most of the time, since start_polling() is
